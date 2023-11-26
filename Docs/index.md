@@ -9,8 +9,8 @@ Now I can directly export dxf files right out of OpenSCAD.
 And in addition, I now can engrave/raster in such a way that I can visually see the result right away, while working in OpenSCAD. The output is then exported to SVG (or pdf). 
 
 ### Do see the examples
-- [Include file](https://github.com/Fihl/LaserCutter2D/Src/LaserCutter2D.scad)
-- [WeatherStation](https://github.com/Fihl/LaserCutter2D/Src/WeatherStation/)
-- [iceKeyer, a CW keyer](https://github.com/Fihl//LaserCutter2D/Src/iceKeyer/)
+- [Include file](https://github.com/Fihl/LaserCutter2D/blob/main/Src/LaserCutter2D.scad)
+- [WeatherStation](https://github.com/Fihl/LaserCutter2D/tree/main/Src/WeatherStation/)
+- [iceKeyer, a CW keyer](https://github.com/Fihl/LaserCutter2D/tree/main/Src/iceKeyer/)
 
 ## <font face="Monotype Corsiva">Christen Fihl, Denmark  OZ1AAB</font>
