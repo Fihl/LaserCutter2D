@@ -1,3 +1,11 @@
+// Testet in Arduino 1.8.19. I do thing Arduino 2.xx is ok too
+// Instructions
+//   See https://github.com/GJKJ/WSKS
+//   Do NOT run any exe files to update ESP
+//   Get esp8266-weather-station-master into Library folder
+//   Use NodeMCU 1.0 (ESP-12E...)
+//   Compile and ouload this code, after updating PrivateCredentials.h
+
 #include <ESPWiFi.h>
 #include <ESPHTTPClient.h>
 #include <JsonListener.h>
@@ -5,6 +13,7 @@
 #include <time.h>
 #include <sys/time.h>
 
+#include <DFRobot_DHT11.h>
 #include "SSD1306Wire.h"
 #include "OLEDDisplayUi.h"
 #include "Wire.h"
@@ -31,7 +40,8 @@ Adafruit_MQTT_Publish mqtt_Baro = Adafruit_MQTT_Publish(&mqtt, AIO_USERNAME "/fe
 Adafruit_MQTT_Publish mqtt_Humi = Adafruit_MQTT_Publish(&mqtt, AIO_USERNAME "/feeds/Fugt");
 
 // DHT11 Settings
-#define pin 14 // ESP8266-12E  D5 read emperature and Humidity data
+DFRobot_DHT11 DHT;
+#define DHT11_PIN 14 // ESP8266-12E  D5 read emperature and Humidity data
 int _Temp; //temperature
 int _Humi; //humidity
 void readTemperatureHumidity();
@@ -75,10 +85,8 @@ const int SDC_PIN = GPIO2
 // OpenWeatherMap Settings
 // Sign up here to get an API key:
 // https://docs.thingpulse.com/how-tos/openweathermap-key/
-// Test in a browser against https://api.openweathermap.org/data/2.5/weather?id=2615730&appid=1f51750fXXXXXXXXXXX&units=metric&lang=en
-// Put in your own API key
+// Test in a browser against https://api.openweathermap.org/data/2.5/weather?id=2615730&appid=XXXXXXXXXXXXXXXXXXXXXXXXXXXX&units=metric&lang=en
 const boolean IS_METRIC = true;
-// Add your own thingpulse ID
 #include "PrivateCredentials.h" //thingpulse API keys 
 
 // Pick a language code from this list:
@@ -132,8 +140,13 @@ void setReadyForWeatherUpdate();
 
 // Add frames, this array keeps function pointers to all frames
 // frames are the single views that slide from right to left
-FrameCallback frames[] = { drawDateTime, drawCurrentWeather, drawForecast, drawLocal };
+// FrameCallback frames[] = { drawDateTime, drawCurrentWeather, drawForecast, drawLocal };
+// int numberOfFrames = 4;
+
+//My style, not showing the clock
+FrameCallback frames[] = { drawCurrentWeather, drawLocal, drawForecast, drawLocal };
 int numberOfFrames = 4;
+
 
 OverlayCallback overlays[] = { drawHeaderOverlay };
 int numberOfOverlays = 1;
@@ -345,61 +358,10 @@ void setReadyForWeatherUpdate() {
 }
 
 //read temperature humidity data
-void readTemperatureHumidity(){
-  int j;
-  unsigned int loopCnt;
-  int chr[40] = {0};
-  unsigned long time1;
-bgn:
-  delay(2000);
-  //Set interface mode 2 to: output
-  //Output low level 20ms (>18ms)
-  //Output high level 40μs
-  pinMode(pin, OUTPUT);
-  digitalWrite(pin, LOW);
-  delay(20);
-  digitalWrite(pin, HIGH);
-  delayMicroseconds(40);
-  digitalWrite(pin, LOW);
-  //Set interface mode 2: input
-  pinMode(pin, INPUT);
-  //High level response signal
-  loopCnt = 10000;
-  while (digitalRead(pin) != HIGH){
-    if (loopCnt-- == 0){
-      //If don't return to high level for a long time, output a prompt and start over
-      Serial.println("HIGH Humidity");
-      goto bgn;
-    }
-  }
-  //Low level response signal
-  loopCnt = 30000;
-  while (digitalRead(pin) != LOW){
-    if (loopCnt-- == 0){
-      //If don't return low for a long time, output a prompt and start over
-      Serial.println("LOW Humidity");
-      goto bgn;
-    }
-  }
-  //Start reading the value of bit1-40
-  for (int i = 0; i < 40; i++){
-    while (digitalRead(pin) == LOW){}
-    //When the high level occurs, write down the time "time"
-    time1 = micros();
-    while (digitalRead(pin) == HIGH){}
-    //When there is a low level, write down the time and subtract the time just saved
-    //If the value obtained is greater than 50μs, it is ‘1’, otherwise it is ‘0’
-    //And save it in an array
-    if (micros() - time1  > 50){
-      chr[i] = 1;
-    } else {
-      chr[i] = 0;
-    }
-  }
-  //Humidity, 8-bit bit, converted to a value
-  _Humi = chr[0] * 128 + chr[1] * 64 + chr[2] * 32 + chr[3] * 16 + chr[4] * 8 + chr[5] * 4 + chr[6] * 2 + chr[7];
-  //Temperature, 8-bit bit, converted to a value
-  _Temp = chr[16] * 128 + chr[17] * 64 + chr[18] * 32 + chr[19] * 16 + chr[20] * 8 + chr[21] * 4 + chr[22] * 2 + chr[23];
+void readTemperatureHumidity() {
+  DHT.read(DHT11_PIN);
+  _Temp = DHT.temperature;
+  _Humi = DHT.humidity;
 }
 
 void readLight(){
