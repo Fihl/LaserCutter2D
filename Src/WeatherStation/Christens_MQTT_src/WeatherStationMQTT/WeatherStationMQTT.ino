@@ -75,10 +75,11 @@ const int SDC_PIN = GPIO2
 // OpenWeatherMap Settings
 // Sign up here to get an API key:
 // https://docs.thingpulse.com/how-tos/openweathermap-key/
+// Test in a browser against https://api.openweathermap.org/data/2.5/weather?id=2615730&appid=1f51750fXXXXXXXXXXX&units=metric&lang=en
+// Put in your own API key
 const boolean IS_METRIC = true;
-// Add your own thingpulse ID 
-String OPEN_WEATHER_MAP_APP_ID = "1f51750f1545e5b21f80e4c1b66062d3";
-String OPEN_WEATHER_MAP_LOCATION_ID = "2615730"; // updateForecasts vs updateForecastsById
+// Add your own thingpulse ID
+#include "PrivateCredentials.h" //thingpulse API keys 
 
 // Pick a language code from this list:
 // Arabic - ar, Bulgarian - bg, Catalan - ca, Czech - cz, German - de, Greek - el,
