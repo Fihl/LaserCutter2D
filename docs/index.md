@@ -10,6 +10,7 @@ And in addition, I now can engrave/raster in such a way that I can visually see 
 
 ### Do see the examples
 - [Include file](https://github.com/Fihl/LaserCutter2D/blob/main/Src/LaserCutter2D.scad)
+- [DICE, a getting started project](https://github.com/Fihl/LaserCutter2D/tree/main/Src/Dice/)
 - [WeatherStation](https://github.com/Fihl/LaserCutter2D/tree/main/Src/WeatherStation/)
 - [iceKeyer, a CW keyer](https://github.com/Fihl/LaserCutter2D/tree/main/Src/iceKeyer/)
 
