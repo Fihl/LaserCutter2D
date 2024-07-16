@@ -14,7 +14,7 @@ layout = 2;  // 0=My way, best for design, 1=Tall(y), 2=Flat(x)
 
 doLaserCut = 1; //To export DFX file. F5+F6+Export-DXF
                 //Otherwise only text (and corners shown) to SVG. F5+F6+Export-SVG (or pdf)
-doSVGtext = 1;  //0 when export to DXF, to get rid of my corners (or if text goes outside of area)
+doSVGtext = 0;  //0 when export to DXF, to get rid of my corners (or if text goes outside of area)
 
 x = 45;
 y = 25;
@@ -111,7 +111,8 @@ module doBack(x,y, dx,dy, direction=0) {
 module doRight(x,y, dx,dy, direction=0) {
 USBw=7;
 USBh=12-USBw; //Rounded ends
-USBx=20;
+USBx=15;
+USBy=y/2-5;
   translate([dx,dy]) {
     rotate(direction) {
         txt(x,y,USBx+15,y/2+7,"USB",6,-90);
@@ -124,15 +125,16 @@ USBx=20;
                 [LEFT, 1, fingery]
             ],
             circles_remove = [
-                [2, USBx+17/2, y/2],        //uUSB=5*9.5, USBc=7*12. holes = 17
-                [2, USBx-17/2, y/2],        //uUSB/USBc
-                [USBw/2, USBx-USBh/2, y/2], //USBc, rounded hole. Also fits uUSB
-                [USBw/2, USBx+USBh/2, y/2], //USBc, rounded hole
-                [4, 3, 2*y/8],              //USB?
+                [2, USBx+17/2, USBy],        //uUSB=5*9.5, USBc=7*12. holes = 17
+                [2, USBx-17/2, USBy],        //uUSB/USBc
+                [USBw/2, USBx-USBh/2, USBy], //USBc, rounded hole. Also fits uUSB
+                [USBw/2, USBx+USBh/2, USBy], //USBc, rounded hole
+            //  [4, 3, 2*y/8],               //USB?
             ],
             cutouts = [ 
-                [USBx-USBh/2, y/2-USBw/2, USBh, USBw], //uUSB
-                [z-20, 6, 16, 12.5], //DHT
+                [USBx-USBh/2, USBy-USBw/2, USBh, USBw], //uUSB
+            //  [z-20, 6, 16, 12.5],         //DHT11
+                [z-30, y/2-7.5, 20.1, 15.1], //DHT22
             ]
         );
     }
