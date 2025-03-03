@@ -1,5 +1,4 @@
-// Box for my iceKeyer, https://Fihl.net https://Fihl.net/iceKeyer
-// A CW morse keyer, without moving parts
+// A 20x20x20 mm3 dice
 
 // This file is for OpenSCAD, the best
 
